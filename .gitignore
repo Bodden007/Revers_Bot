@@ -1,4 +1,5 @@
 HELP.md
+.vk.properties
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
