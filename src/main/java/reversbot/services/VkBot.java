@@ -7,6 +7,7 @@ import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
+import com.vk.api.sdk.objects.wall.GetFilter;
 import com.vk.api.sdk.objects.wall.responses.GetResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,6 +41,7 @@ public class VkBot {
                 .ownerId(-206163403)
                 .count(1)
                 .offset(5)
+                .filter(GetFilter.valueOf("ALL"))
                 .execute();
 
 
