@@ -2,6 +2,11 @@ plugins {
 	id 'org.springframework.boot' version '2.7.2'
 	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
 	id 'java'
+	id 'application'
+}
+
+tasks.withType(JavaCompile){
+	options.encoding = 'UTF-8'
 }
 
 group = 'ReversBot'
@@ -10,11 +15,16 @@ sourceCompatibility = '18'
 
 repositories {
 	mavenCentral()
+
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation('org.springframework.boot:spring-boot-starter') {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'com.vk.api:sdk:1.0.14'
+
 }
 
 tasks.named('test') {
