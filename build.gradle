@@ -4,9 +4,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
 	id 'java'
 	id 'application'
-
 }
-
 
 tasks.withType(JavaCompile){
 	options.encoding = 'UTF-8'
@@ -21,18 +19,12 @@ repositories {
 	mavenLocal()
 }
 
-
-
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter') {
+	implementation('org.springframework.boot:spring-boot-starter-web') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-
 	}
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'com.vk.api:sdk:1.0.14'
-
-
-
 
 }
 
