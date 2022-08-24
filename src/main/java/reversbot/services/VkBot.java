@@ -178,7 +178,7 @@ public class VkBot<jsonString> {
 
                           //   Если есть video копируем URL video
                         }else if (typeAtt.equals(typeAttVideo)) {
-                            
+
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                          // это заглушка video
                             System.out.println("It's video");
@@ -224,6 +224,22 @@ public class VkBot<jsonString> {
                     postId[numberGet] = 0;
                     System.out.println(numberGet + "  Old message");
              }
+        }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                // Запись ID сообщений в файл
+
+        try {
+            writer = new BufferedWriter(new FileWriter("src/cache/oldId/OldId.txt"));
+            for (int i = 0; i <= 4; i ++) {
+                writer.write(Integer.toString(postId[i]));
+                writer.newLine();
+            }
+        }catch (RuntimeException e) {
+            System.out.println("ERROR SAVING");
+
+        }finally {
+            writer.flush();
+            writer.close();
         }
     return 0;
    }
