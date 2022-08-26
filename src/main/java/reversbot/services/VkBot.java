@@ -28,7 +28,7 @@ public class VkBot<jsonString> {
     int own_Id;
 
     static int [] postIdOld = new int[5];
-    static int [] postId = new int[5];
+    static int [] postId = new int[10];
 
     static String [] urlPhoto = new String[10];
 
@@ -46,7 +46,6 @@ public class VkBot<jsonString> {
 
         String text = null;
         Integer numberGet = 0;
-        String post_sours = null;
         String jsonString = null;
         String fileName = "TestImage";
         GetResponse getResponse = null;
@@ -58,8 +57,8 @@ public class VkBot<jsonString> {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Чистим кэш удаляем из деректории text & image
 
-        FileUtils.cleanDirectory(new File("src/cache/text"));
-        FileUtils.cleanDirectory(new File("src/cache/image"));
+        FileUtils.cleanDirectory(new File("src/cache/vk" + own_Id + "/text"));
+        FileUtils.cleanDirectory(new File("src/cache/vk" + own_Id +"/image"));
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         try {
@@ -80,7 +79,7 @@ public class VkBot<jsonString> {
         // Забераем данные ID с cache для сравнения
 
         try {
-            reader = new BufferedReader(new FileReader("src/cache/oldId/OldId.txt"));
+            reader = new BufferedReader(new FileReader("src/cache/vk" + own_Id + "/Id/Idold.txt"));
             for (int i = 0; i <= 4; i ++) {
                 postIdOld [i] = Integer.parseInt(reader.readLine());
             }
@@ -100,7 +99,6 @@ public class VkBot<jsonString> {
                 postId[numberGet] = getResponse.getItems().get(numberGet).getId();
 
                 //сравнение ID на повторяемость запросов
-
 
                 if ((postId[numberGet] > postIdOld[4]) & (postId[numberGet] > postIdOld[3])
                         & (postId[numberGet] > postIdOld[2]) & (postId[numberGet] > postIdOld[1])
@@ -142,7 +140,7 @@ public class VkBot<jsonString> {
 
                         try {
                             jsonString = getResponse.getItems().get(numberGet).getText();
-                            writer = new BufferedWriter(new FileWriter("src/cache/text/VkText" + numberGet + ".txt"));
+                            writer = new BufferedWriter(new FileWriter("src/cache/vk" + own_Id + "/text/VkText" + numberGet + ".txt"));
                             if (numberGet.equals(0)) {
                                 writer.write(jsonString);
                             } else {
@@ -175,7 +173,7 @@ public class VkBot<jsonString> {
                                 }
                             }
 
-                          //   Если есть video копируем URL video
+                          //   Если есть video копируем URL video ( пока заглушка)
                         }else if (typeAtt.equals(typeAttVideo)) {
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -197,7 +195,7 @@ public class VkBot<jsonString> {
 
                                 try {
                                     bufferedInputStream = new BufferedInputStream(new URL(urlPhoto[i]).openStream());
-                                    fileOutputStream = new FileOutputStream("src/cache/image/" + fileName
+                                    fileOutputStream = new FileOutputStream("src/cache/vk" + own_Id + "/image/" + fileName
                                             + numberGet + "_" + i + ".png");
                                     byte data[] = new byte[1024];
                                     int count;
@@ -218,9 +216,9 @@ public class VkBot<jsonString> {
                         }else {
                         System.out.println("Post  " + postId[numberGet] + "  Out");
                         }
-
+//##############################################################################################
                 }else{
-                    postId[numberGet] = 0;
+
                     System.out.println(numberGet + "  Old message");
              }
         }
@@ -228,7 +226,7 @@ public class VkBot<jsonString> {
                 // Запись ID сообщений в файл
 
         try {
-            writer = new BufferedWriter(new FileWriter("src/cache/oldId/OldId.txt"));
+            writer = new BufferedWriter(new FileWriter("src/cache/vk" + own_Id + "/Id/Idold.txt"));
             for (int i = 0; i <= 4; i ++) {
                 writer.write(Integer.toString(postId[i]));
                 writer.newLine();

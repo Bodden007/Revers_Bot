@@ -23,7 +23,7 @@ public class Main {
 
 		vkBot.vkb();
 
-		System.out.println("Test Ok");
+		System.out.println("Test Main Ok");
 
 	}
 
