@@ -58,8 +58,8 @@ public class VkBot<jsonString> {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         // Чистим кэш удаляем из деректории text & image
 
-//        FileUtils.cleanDirectory(new File("src/cache/text"));
-//        FileUtils.cleanDirectory(new File("src/cache/image"));
+        FileUtils.cleanDirectory(new File("src/cache/text"));
+        FileUtils.cleanDirectory(new File("src/cache/image"));
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         try {
@@ -79,16 +79,16 @@ public class VkBot<jsonString> {
 
         // Забераем данные ID с cache для сравнения
 
-//        try {
-//            reader = new BufferedReader(new FileReader("src/cache/oldId/OldId.txt"));
-//            for (int i = 0; i <= 4; i ++) {
-//                postIdOld [i] = Integer.parseInt(reader.readLine());
-//            }
-//        } catch (RuntimeException e) {
-//            System.out.println("reader faile");
-//        } finally {
-//            reader.close();
-//        }
+        try {
+            reader = new BufferedReader(new FileReader("src/cache/oldId/OldId.txt"));
+            for (int i = 0; i <= 4; i ++) {
+                postIdOld [i] = Integer.parseInt(reader.readLine());
+            }
+        } catch (RuntimeException e) {
+            System.out.println("reader faile");
+        } finally {
+            reader.close();
+        }
         //Начало основного цикла.
 
             for ( numberGet = 4; numberGet >= 0; numberGet --) {
@@ -140,20 +140,20 @@ public class VkBot<jsonString> {
                         // чтение в переменную jsonString, text из JSON
                         //считываем сообщение в файл
 
-//                        try {
-//                            jsonString = getResponse.getItems().get(numberGet).getText();
-//                            writer = new BufferedWriter(new FileWriter("src/cache/text/VkText" + numberGet + ".txt"));
-//                            if (numberGet.equals(0)) {
-//                                writer.write(jsonString);
-//                            } else {
-//                                writer.append(jsonString);
-//                            }
-//                        } catch (RuntimeException e) {
-//                            System.out.println(numberGet + " NO TEXT");
-//                            return 0;
-//                        } finally {
-//                            writer.close();
-//                        }
+                        try {
+                            jsonString = getResponse.getItems().get(numberGet).getText();
+                            writer = new BufferedWriter(new FileWriter("src/cache/text/VkText" + numberGet + ".txt"));
+                            if (numberGet.equals(0)) {
+                                writer.write(jsonString);
+                            } else {
+                                writer.append(jsonString);
+                            }
+                        } catch (RuntimeException e) {
+                            System.out.println(numberGet + " NO TEXT");
+                            return 0;
+                        } finally {
+                            writer.close();
+                        }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
                         // Если есть photo копируем URL photo
@@ -195,23 +195,23 @@ public class VkBot<jsonString> {
 
                             for ( int i = 0; i <= (phelp - 1); i++) {
 
-//                                try {
-//                                    bufferedInputStream = new BufferedInputStream(new URL(urlPhoto[i]).openStream());
-//                                    fileOutputStream = new FileOutputStream("src/cache/image/" + fileName
-//                                            + numberGet + "_" + i + ".png");
-//                                    byte data[] = new byte[1024];
-//                                    int count;
-//                                    while ((count = bufferedInputStream.read(data, 0, 1024)) != -1) {
-//                                        fileOutputStream.write(data, 0, count);
-//                                        fileOutputStream.flush();
-//                                    }
-//                                } catch (RuntimeException e) {
-//                                    System.out.println("Saving error");
-//                                    break;
-//                                } finally {
-//                                    bufferedInputStream.close();
-//                                    fileOutputStream.close();
-//                                }
+                                try {
+                                    bufferedInputStream = new BufferedInputStream(new URL(urlPhoto[i]).openStream());
+                                    fileOutputStream = new FileOutputStream("src/cache/image/" + fileName
+                                            + numberGet + "_" + i + ".png");
+                                    byte data[] = new byte[1024];
+                                    int count;
+                                    while ((count = bufferedInputStream.read(data, 0, 1024)) != -1) {
+                                        fileOutputStream.write(data, 0, count);
+                                        fileOutputStream.flush();
+                                    }
+                                } catch (RuntimeException e) {
+                                    System.out.println("Saving error");
+                                    break;
+                                } finally {
+                                    bufferedInputStream.close();
+                                    fileOutputStream.close();
+                                }
                             }
                         }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -227,19 +227,19 @@ public class VkBot<jsonString> {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 // Запись ID сообщений в файл
 
-//        try {
-//            writer = new BufferedWriter(new FileWriter("src/cache/oldId/OldId.txt"));
-//            for (int i = 0; i <= 4; i ++) {
-//                writer.write(Integer.toString(postId[i]));
-//                writer.newLine();
-//            }
-//        }catch (RuntimeException e) {
-//            System.out.println("ERROR SAVING");
-//
-//        }finally {
-//            writer.flush();
-//            writer.close();
-//        }
+        try {
+            writer = new BufferedWriter(new FileWriter("src/cache/oldId/OldId.txt"));
+            for (int i = 0; i <= 4; i ++) {
+                writer.write(Integer.toString(postId[i]));
+                writer.newLine();
+            }
+        }catch (RuntimeException e) {
+            System.out.println("ERROR SAVING");
+
+        }finally {
+            writer.flush();
+            writer.close();
+        }
     return 0;
    }
 }
