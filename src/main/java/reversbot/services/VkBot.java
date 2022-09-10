@@ -8,14 +8,17 @@ import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
 import com.vk.api.sdk.objects.wall.GetFilter;
 import com.vk.api.sdk.objects.wall.responses.GetResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.URL;
 
+
 @Service
-public class VkBot<jsonString> {
+@Slf4j
+public class VkBot {
 
     @Value("${APP_ID}")
     int APP_ID;
@@ -37,6 +40,8 @@ public class VkBot<jsonString> {
     static String typeAtt = "null";
     static String typeAttPhoto = "photo";
     static String typeAttVideo = "video";
+    static String foundtext = null;
+    static String message = "new";
 
 
 
@@ -46,7 +51,6 @@ public class VkBot<jsonString> {
 
         String text = null;
         Integer numberGet = 0;
-        String jsonString = null;
         String fileName = "TestImage";
         GetResponse getResponse = null;
         FileOutputStream fileOutputStream = null;
@@ -72,7 +76,7 @@ public class VkBot<jsonString> {
                     .filter(GetFilter.valueOf("ALL"))
                     .execute();
         }catch (RuntimeException e) {
-            System.out.println("NO HTTP");
+            log.error("No HTTP", new Throwable());
             return 0;
         }
 
@@ -84,7 +88,7 @@ public class VkBot<jsonString> {
                 postIdOld [i] = Integer.parseInt(reader.readLine());
             }
         } catch (RuntimeException e) {
-            System.out.println("reader faile");
+            log.error("reader faile");
         } finally {
             reader.close();
         }
@@ -104,20 +108,14 @@ public class VkBot<jsonString> {
                         & (postId[numberGet] > postIdOld[2]) & (postId[numberGet] > postIdOld[1])
                         & (postId[numberGet] > postIdOld[0])) {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                    // определение наличие text. Если text нет, сообщение игнорируем
 
-                    // Test
-                    System.out.println(numberGet + "  ID " + postId[numberGet]);
-                    //Test
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //                         Определяем тип вложений PHOTO & VIDEO
                     try {
                         typeAtt = String.valueOf(getResponse.getItems().get(numberGet)
                                 .getAttachments().get(0).getType());
-                        System.out.println("It's  " + typeAtt);
+//                        System.out.println("It's  " + typeAtt);
                     }catch (RuntimeException e) {
-                        System.out.println("The type is not defined");
+
                     }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -125,36 +123,37 @@ public class VkBot<jsonString> {
                     try {
                         text = getResponse.getItems().get(numberGet).getText();
                     } catch (RuntimeException e) {
-                        text = null;
+//                        log.error("error");
                     }
 
+                    // определение наличие text. Если text нет, сообщение игнорируем
 
                         if (!(text.equals(""))) {
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                        foundtext = "yes";
 
-                        System.out.println("ID " + postId[numberGet] + " Text Ok! -- " + text);
-
-                        // чтение в переменную jsonString, text из JSON
                         //считываем сообщение в файл
 
                         try {
-                            jsonString = getResponse.getItems().get(numberGet).getText();
                             writer = new BufferedWriter(new FileWriter("src/cache/vk" + own_Id + "/text/VkText" + numberGet + ".txt"));
                             if (numberGet.equals(0)) {
-                                writer.write(jsonString);
+                                writer.write(text);
                             } else {
-                                writer.append(jsonString);
+                                writer.append(text);
                             }
                         } catch (RuntimeException e) {
-                            System.out.println(numberGet + " NO TEXT");
                             return 0;
                         } finally {
+                            writer.flush();
                             writer.close();
                         }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
                         // Если есть photo копируем URL photo
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            // ПЕРЕДЕЛАТЬ
 
                         if (typeAtt.equals(typeAttPhoto)) {
                             for (int i = 0; i < 20; i++) {
@@ -163,12 +162,7 @@ public class VkBot<jsonString> {
                                             .getAttachments().get(i).getPhoto()
                                             .getSizes().get(8).getUrl());
                                     phelp = phelp + 1;
-                                    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-                                    System.out.println(i);
-                                    System.out.println(urlPhoto[i]);
-                                    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
                                 } catch (RuntimeException e) {
-                                    System.out.println("Quantity IMAGE -  " + phelp);
                                     break;
                                 }
                             }
@@ -187,10 +181,6 @@ public class VkBot<jsonString> {
 
                          if (typeAtt.equals(typeAttPhoto)) {
 
-                             // TEST
-                             System.out.println(postId[numberGet] + "  Image Yes");
-                             // TEST
-
                             for ( int i = 0; i <= (phelp - 1); i++) {
 
                                 try {
@@ -204,7 +194,7 @@ public class VkBot<jsonString> {
                                         fileOutputStream.flush();
                                     }
                                 } catch (RuntimeException e) {
-                                    System.out.println("Saving error");
+                                    log.error("Saving error");
                                     break;
                                 } finally {
                                     bufferedInputStream.close();
@@ -214,13 +204,16 @@ public class VkBot<jsonString> {
                         }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                         }else {
-                        System.out.println("Post  " + postId[numberGet] + "  Out");
+                        foundtext = "not";
+//                        System.out.println("Post  " + postId[numberGet] + "  Out");
                         }
 //##############################################################################################
                 }else{
-
-                    System.out.println(numberGet + "  Old message");
+                    message = "old";
              }
+
+        log.info("ID Post " + postId[numberGet] + ", message " + message + ", text " + foundtext + ", attachment " + typeAtt
+        + ", quantity IMAGE " + phelp);
         }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 // Запись ID сообщений в файл
@@ -232,7 +225,7 @@ public class VkBot<jsonString> {
                 writer.newLine();
             }
         }catch (RuntimeException e) {
-            System.out.println("ERROR SAVING");
+            log.error("ERROR SAVING");
 
         }finally {
             writer.flush();

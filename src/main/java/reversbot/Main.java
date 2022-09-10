@@ -1,11 +1,16 @@
 package reversbot;
 
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import reversbot.services.VkBot;
 
+
+
 @SpringBootApplication
+@Slf4j
 public class Main {
 
 	static String DataText;
@@ -17,13 +22,14 @@ public class Main {
 		DataText = dataText;
 	}
 
+
 	public static void main(String[] args) throws Exception {
 		ApplicationContext context = new AnnotationConfigApplicationContext (InjectionContext.class);
 		VkBot vkBot = context.getBean(VkBot.class);
 
 		vkBot.vkb();
 
-		System.out.println("Test Main Ok");
+		log.info("Main class ok");
 
 	}
 
