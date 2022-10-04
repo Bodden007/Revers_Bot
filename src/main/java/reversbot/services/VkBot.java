@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.URL;
+import java.util.Optional;
 
 
 @Service
@@ -35,13 +36,14 @@ public class VkBot {
 
     static String [] urlPhoto = new String[10];
 
-    static int phelp = 0;
+    static int phelp = -1;
 
-    static String typeAtt = "null";
-    static String typeAttPhoto = "photo";
-    static String typeAttVideo = "video";
+    static String typeAtt = new String("null");
+    static String typeAttPhoto = new String("photo");
+    static String typeAttVideo = new String("video");
     static String foundtext = null;
     static String message = "new";
+    static String checkURl = null;
 
 
 
@@ -111,10 +113,16 @@ public class VkBot {
 
 //                         Определяем тип вложений PHOTO & VIDEO
                     try {
+                        if ((getResponse.getItems().get(numberGet)
+                                .getAttachments()) != null) {
                         typeAtt = String.valueOf(getResponse.getItems().get(numberGet)
                                 .getAttachments().get(0).getType());
-//                        System.out.println("It's  " + typeAtt);
+                        }else {
+                            typeAtt = "null";
+                        }
                     }catch (RuntimeException e) {
+
+                        e.printStackTrace();
 
                     }
 
@@ -123,7 +131,7 @@ public class VkBot {
                     try {
                         text = getResponse.getItems().get(numberGet).getText();
                     } catch (RuntimeException e) {
-//                        log.error("error");
+                        log.error("error");
                     }
 
                     // определение наличие text. Если text нет, сообщение игнорируем
@@ -136,7 +144,8 @@ public class VkBot {
                         //считываем сообщение в файл
 
                         try {
-                            writer = new BufferedWriter(new FileWriter("src/cache/vk" + own_Id + "/text/VkText" + numberGet + ".txt"));
+                            writer = new BufferedWriter(new FileWriter("src/cache/vk" + own_Id
+                                    + "/text/VkText" + "_" + numberGet + ".txt"));
                             if (numberGet.equals(0)) {
                                 writer.write(text);
                             } else {
@@ -156,15 +165,26 @@ public class VkBot {
                             // ПЕРЕДЕЛАТЬ
 
                         if (typeAtt.equals(typeAttPhoto)) {
-                            for (int i = 0; i < 20; i++) {
-                                try {
-                                    urlPhoto[i] = String.valueOf(getResponse.getItems().get(numberGet)
-                                            .getAttachments().get(i).getPhoto()
-                                            .getSizes().get(8).getUrl());
-                                    phelp = phelp + 1;
-                                } catch (RuntimeException e) {
-                                    break;
-                                }
+                            try {
+                            for ( int i = 0 ; i < urlPhoto.length; i++) {
+                                Optional optional = Optional.ofNullable(getResponse.getItems().get(numberGet)
+                                        .getAttachments());
+
+                                if (optional.isPresent()) {
+                                        urlPhoto[i] = String.valueOf(getResponse.getItems().get(numberGet)
+                                                .getAttachments().get(i).getPhoto()
+                                                .getSizes().get(8).getUrl());
+                                        phelp = phelp + 1;
+
+                                } else {
+                                    log.info(postId[numberGet] + " - STOP NULL");
+                                    break;}
+
+                            }
+                            } catch (RuntimeException e) {
+//                                log.error(postId[numberGet] + " NPE PHOTO");
+//
+//                                e.printStackTrace();
                             }
 
                           //   Если есть video копируем URL video ( пока заглушка)
@@ -186,7 +206,7 @@ public class VkBot {
                                 try {
                                     bufferedInputStream = new BufferedInputStream(new URL(urlPhoto[i]).openStream());
                                     fileOutputStream = new FileOutputStream("src/cache/vk" + own_Id + "/image/" + fileName
-                                            + numberGet + "_" + i + ".png");
+                                           + "_" + numberGet + "_" + i + ".png");
                                     byte data[] = new byte[1024];
                                     int count;
                                     while ((count = bufferedInputStream.read(data, 0, 1024)) != -1) {
@@ -205,15 +225,15 @@ public class VkBot {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                         }else {
                         foundtext = "not";
-//                        System.out.println("Post  " + postId[numberGet] + "  Out");
                         }
 //##############################################################################################
                 }else{
                     message = "old";
              }
 
-        log.info("ID Post " + postId[numberGet] + ", message " + message + ", text " + foundtext + ", attachment " + typeAtt
-        + ", quantity IMAGE " + phelp);
+        log.info("GetResponse " + numberGet + ",ID Post " + postId[numberGet] + ", message " + message
+                + ", text " + foundtext + ", attachment " + typeAtt
+                + ", quantity IMAGE " + phelp);
         }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 // Запись ID сообщений в файл
