@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import reversbot.services.TelegBot;
 import reversbot.services.VkBot;
 
 
@@ -18,6 +19,11 @@ public class InjectionContext {
     public VkBot vkBot() {
         return new VkBot();
     }
+
+    @Bean
+    public TelegBot telegBot(){ return new TelegBot();}
+
+
 
 
 
