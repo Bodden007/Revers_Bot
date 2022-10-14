@@ -11,27 +11,34 @@ import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
 import com.vk.api.sdk.objects.wall.GetFilter;
 import com.vk.api.sdk.objects.wall.responses.GetResponse;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+
 import java.io.*;
-@Service
+@Component
 @Slf4j
+@Getter
+@Setter
 public class VkBot {
 
     @Value("${APP_ID}")
     int APP_ID;
+    private String Myaccess_token;
 
     @Value("${access_token}")
-    String access_token;
+    public void setMyaccess_token(String access_token){
+        this.Myaccess_token = access_token;
+    }
+
+
 
     static int [] post_id = new int[5];
     static int post_id_new = 0;
-
     static String [] urlPhoto = new String[10];
-
     static int quantAttach = 0;
-
     static String typeAtt = new String("null");
     static String typeAttPhoto = new String("photo");
     static String typeAttVideo = new String("video");
@@ -45,10 +52,11 @@ public class VkBot {
 
         GetResponse getResponse = null;
 
+
         try {
             TransportClient transportClient = new HttpTransportClient();
             VkApiClient vk = new VkApiClient(transportClient);
-            UserActor actor = new UserActor(APP_ID, access_token);
+            UserActor actor = new UserActor(APP_ID, Myaccess_token);
             getResponse = vk.wall().get(actor)
                     .ownerId(own_Id)
                     .count(5)
@@ -126,30 +134,13 @@ public class VkBot {
                     }
                 }
             }catch (RuntimeException e){
-//                log.error("NOT JSON");
+                log.error("NOT JSON");
             }
 
         }
 
         return (ListMultimap<Integer, String>) post;
     }
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                // Запись ID сообщений в файл
-
-//        try {
-//            writer = new BufferedWriter(new FileWriter("src/cache/vk" + own_Id + "/Id/Idold.txt"));
-//            for (int i = 0; i <= 4; i ++) {
-//                writer.write(Integer.toString(post_id_new[i]));
-//                writer.newLine();
-//            }
-//        }catch (RuntimeException e) {
-//            log.error("ERROR SAVING");
-//
-//        }finally {
-//            writer.flush();
-//            writer.close();
-
 
 }
 

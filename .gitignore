@@ -1,5 +1,4 @@
 HELP.md
-resources/
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -37,3 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 !/.gitignore
+/src/main/resources/
