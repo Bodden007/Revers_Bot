@@ -1,6 +1,6 @@
 package reversbot;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,13 +11,15 @@ import reversbot.services.TelegBot;
 import reversbot.services.VkBot;
 
 
-@Configuration
+
+//@Configuration
 @PropertySource(value = "classpath:/vk.properties", ignoreResourceNotFound = true)
+@EnableScheduling
 public class InjectionContext {
 
     @Bean
-    public ReverseBot reverseBot(){
-        return new ReverseBot();
+    public ControllerBot reverseBot(){
+        return new ControllerBot();
     }
 
     @Bean

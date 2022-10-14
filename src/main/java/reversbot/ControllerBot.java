@@ -6,26 +6,21 @@ import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import reversbot.services.TelegBot;
 import reversbot.services.VkBot;
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import java.io.*;
 import java.util.Objects;
 
-@Service
-@EnableScheduling
+@Component
 @Slf4j
-public class ReverseBot {
+public class ControllerBot {
 
     @Autowired
     public  VkBot vkBot;
@@ -43,10 +38,8 @@ public class ReverseBot {
     static Boolean  text;
     static Boolean video;
 
-
-//        @Scheduled(fixedRate = 100000)
-        public void revBot() throws IOException, ClientException, ApiException {
-
+        @Scheduled(fixedRate = 900000)
+        public void contrBot() throws IOException, ClientException, ApiException {
 
             BufferedWriter writer = null;
             BufferedReader reader = null;
@@ -117,8 +110,6 @@ public class ReverseBot {
 
                         telegBot.sendHi();
 
-                        log.info("Post: " + post_id_new[i1] + ", text: " + text + ", attachment: " + quantAttach);
-
                         try {
                             if (quantAttach == 0){
 
@@ -145,8 +136,6 @@ public class ReverseBot {
 
                                 JsonArray jsonString = jsonHash.build();
 
-                                System.out.println("JSON String: " + jsonString);
-
                                 telegBot.sendMediaGroup(String.valueOf(jsonString));
 
                             } else {
@@ -156,14 +145,14 @@ public class ReverseBot {
                             log.error(post_id_new[i1] + ": ERROR ATTACHMENT");
                         }
 
+                        log.info("Post: " + post_id_new[i1] + ", text: " + text + ", attachment: " + quantAttach);
+
                     }else {
 
                         log.info("Post: " + post_id_new[i1] + "- FLY");
-
                     }
 
                 }
-
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //                  Saving the id post locally in file
 
