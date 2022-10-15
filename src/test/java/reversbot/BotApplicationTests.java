@@ -9,9 +9,5 @@ import javax.json.JsonArray;
 @SpringBootTest
 class BotApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
 
 }

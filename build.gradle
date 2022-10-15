@@ -8,7 +8,27 @@ plugins {
 
 tasks.withType(JavaCompile){
 	options.encoding = 'UTF-8'
+
 }
+
+//tasks.withType(Bot.jar) {
+//	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//}
+
+
+
+	tasks.jar {
+
+		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+		manifest {
+			attributes 'Main-Class': 'reversbot.Main'
+		}
+		from {
+			configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+		}
+	}
+
+
 
 group = 'ReversBot'
 version = '0.0.1-SNAPSHOT'
@@ -20,9 +40,7 @@ repositories {
 }
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter-web') {
-		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-	}
+	implementation('org.springframework.boot:spring-boot-starter-web')
 	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -31,6 +49,12 @@ dependencies {
 	implementation group: 'org.glassfish', name: 'javax.json', version: '1.1.4'
 	implementation 'com.google.guava:guava:31.1-jre'
 
+}
+
+configurations {
+	all {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
 }
 
 tasks.named('test') {
