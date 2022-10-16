@@ -27,67 +27,67 @@ public class ControllerBot {
     @Autowired
     public  TelegBot telegBot;
 
-    static int [] id_group = new int[4];
-    static Integer [] post_id_old = new Integer[5];
-    static Integer [] post_id_new = new Integer[5];
+    static int [] idGroup = new int[] {-49664936, -184477562};
+    static Integer [] [] postIdOld = new Integer[2] [5];
+    static Integer [] postIdNew = new Integer[5];
     static String [] keyAtt = new String[2];
     static int quantAttach = 0;
 
     // AUXILIARY VARIABLES
-    static int var;
+    static int var = 2;
     static Boolean  text;
     static Boolean video;
 
         @Scheduled(fixedRate = 900000)
         public void contrBot() throws IOException, ClientException, ApiException {
 
-            BufferedWriter writer = null;
-            BufferedReader reader = null;
+//            BufferedWriter writer = null;
+//            BufferedReader reader = null;
 
             ListMultimap<Integer, String> post = ArrayListMultimap.create();
 
-            var = 0;
+//            var = 2;
 
-            try {
-                reader = new BufferedReader (new FileReader("src/group/id_group.txt") );
-                while (true){
-                    id_group[var] = Integer.parseInt(reader.readLine());
-                    if (id_group[var] >= 0000){
-                        break;
-                    }else {
-                        var ++;
-                    }
-                }
-            }catch (RuntimeException | FileNotFoundException e){
-                log.error("Reading id group");
-                e.printStackTrace();
-            }finally {
-                reader.close();
-            }
+//            try {
+//                reader = new BufferedReader (new FileReader("src/group/idGroup.txt") );
+//                while (true){
+//                    idGroup[var] = Integer.parseInt(reader.readLine());
+//                    if (idGroup[var] >= 0000){
+//                        break;
+//                    }else {
+//                        var ++;
+//                    }
+//                }
+//            }catch (RuntimeException | FileNotFoundException e){
+//                log.error("Reading id group");
+//                e.printStackTrace();
+//            }finally {
+//                reader.close();
+//            }
 
             for (int i = 0; i <= var-1; i++) {
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //                          Reading the previous ones ID posts, saved local
 
-                try {
-                    reader = new BufferedReader(new FileReader("src/group/id_post" + id_group[i] + ".txt"));
-                    for (int p = 0; p <= 4; p ++) {
-                        post_id_old[p] = Integer.parseInt(reader.readLine());
-                    }
-                } catch (RuntimeException e) {
-                    log.error("Reader the id post failed");
-                } finally {
-                    reader.close();
-                }
+//                try {
+//                    reader = new BufferedReader(new FileReader("src/group/id_post" + idGroup[i] + ".txt"));
+//                    for (int p = 0; p <= 4; p ++) {
+//                        postIdOld[p] = Integer.parseInt(reader.readLine());
+//                    }
+//                } catch (RuntimeException e) {
+//                    log.error("Reader the id post failed");
+//                } finally {
+//                    reader.close();
+//                }
 
-                post = vkBot.http_client(id_group[i]);
+                post = vkBot.http_client(idGroup[i]);
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //				json ID_post, text, type attachment, attachment
 
                 for (int i1 = 0 ; i1 < 5; i1 ++) {
 
-                    post_id_new[i1] = Integer.valueOf(post.get(i1).get(0));
+                    postIdNew[i1] = Integer.valueOf(post.get(i1).get(0));
 
                     if ((post.get(i1).get(1)) == "not"){
                         text = false;
@@ -104,9 +104,9 @@ public class ControllerBot {
 
                     quantAttach = Integer.parseInt(keyAtt[1]);
 
-                    if ((!Objects.equals(post_id_new[i1], post_id_old[0])) & (!Objects.equals(post_id_new[i1], post_id_old[1]))
-                            & !Objects.equals(post_id_new[i1], post_id_old[2]) & (!Objects.equals(post_id_new[i1], post_id_old[3]))
-                            & (!Objects.equals(post_id_new[i1], post_id_old[4])) & text & !video) {
+                    if ((!Objects.equals(postIdNew[i1], postIdOld[i][0])) & (!Objects.equals(postIdNew[i1], postIdOld[i][1]))
+                            & !Objects.equals(postIdNew[i1], postIdOld[i][2]) & (!Objects.equals(postIdNew[i1], postIdOld[i][3]))
+                            & (!Objects.equals(postIdNew[i1], postIdOld[i][4])) & text & !video) {
 
                         telegBot.sendHi();
 
@@ -139,41 +139,49 @@ public class ControllerBot {
                                 telegBot.sendMediaGroup(String.valueOf(jsonString));
 
                             } else {
-                                log.error(post_id_new[i1] + ":  ERROR TEXT OR ATTACHMENT");
+                                log.error(postIdNew[i1] + ":  ERROR TEXT OR ATTACHMENT");
                             }
                         }catch (RuntimeException e){
-                            log.error(post_id_new[i1] + ": ERROR ATTACHMENT");
+                            log.error(postIdNew[i1] + ": ERROR ATTACHMENT");
                         }
 
-                        log.info("Post: " + post_id_new[i1] + ", text: " + text + ", attachment: " + quantAttach);
+                        log.info("Post: " + postIdNew[i1] + ", text: " + text + ", attachment: " + quantAttach);
 
                     }else {
 
-                        log.info("Post: " + post_id_new[i1] + "- FLY");
+                        log.info("Post: " + postIdNew[i1] + "- FLY");
                     }
 
                 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//                  Saving the id post locally in file
+//                  Saving the id post in postIdOld
 
-                try {
-                    writer = new BufferedWriter(new FileWriter("src/group/id_post"
-                            + id_group[i] + ".txt"));
-                    for (int i4 = 0; i4 <= 4; i4 ++) {
-                        writer.write(Integer.toString(post_id_new[i4]));
-                        writer.newLine();
-                    }
-                }catch (RuntimeException e) {
-                    log.error("ERROR SAVING");
+//                try {
+//                    writer = new BufferedWriter(new FileWriter("src/group/id_post"
+//                            + idGroup[i] + ".txt"));
+//                    for (int i4 = 0; i4 <= 4; i4 ++) {
+//                        writer.write(Integer.toString(postIdNew[i4]));
+//                        writer.newLine();
+//                    }
+//                }catch (RuntimeException e) {
+//                    log.error("ERROR SAVING");
+//
+//                }finally {
+//                    writer.flush();
+//                    writer.close();
+//                }
 
-                }finally {
-                    writer.flush();
-                    writer.close();
+                for (int i3 = 0; i3 < 5; i3 ++){
+
+
+                    postIdOld [i][i3] = postIdNew[i3];
+
+                    System.out.println("Post Id Old - " + postIdOld[i][i3]);
                 }
 
             }
 
-            log.info("Main class ok");
+            log.info("ControllerBot class ok");
 
         }
 

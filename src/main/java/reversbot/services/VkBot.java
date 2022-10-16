@@ -25,19 +25,16 @@ import java.io.*;
 @Setter
 public class VkBot {
 
-    @Value("${APP_ID}")
-    int APP_ID;
-    private String Myaccess_token;
-
-    @Value("${access_token}")
-    public void setMyaccess_token(String access_token){
-        this.Myaccess_token = access_token;
-    }
+    @Value("${appId}")
+    int appId;
+ 
+    @Value("${accessToken}")
+    private String accessToken;
 
 
 
-    static int [] post_id = new int[5];
-    static int post_id_new = 0;
+    static int [] postId = new int[5];
+    static int postIdNew = 0;
     static String [] urlPhoto = new String[10];
     static int quantAttach = 0;
     static String typeAtt = new String("null");
@@ -47,7 +44,7 @@ public class VkBot {
     GetResponse getResponse = null;
     static String text = "null";
 
-    public ListMultimap<Integer, String> http_client(int own_Id) throws ClientException, ApiException, IOException{
+    public ListMultimap<Integer, String> http_client(int ownId) throws ClientException, ApiException, IOException{
 
         Multimap<Integer, String> post = ArrayListMultimap.create();
 
@@ -56,9 +53,9 @@ public class VkBot {
         try {
             TransportClient transportClient = new HttpTransportClient();
             VkApiClient vk = new VkApiClient(transportClient);
-            UserActor actor = new UserActor(APP_ID, Myaccess_token);
+            UserActor actor = new UserActor(appId, accessToken);
             getResponse = vk.wall().get(actor)
-                    .ownerId(own_Id)
+                    .ownerId(ownId)
                     .count(5)
                     .offset(0)
                     .filter(GetFilter.valueOf("ALL"))
