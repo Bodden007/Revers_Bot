@@ -6,10 +6,8 @@ import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import reversbot.services.TelegBot;
 import reversbot.services.VkBot;
 import javax.json.Json;
@@ -41,49 +39,11 @@ public class ControllerBot {
         @Scheduled(fixedRate = 900000)
         public void contrBot() throws IOException, ClientException, ApiException {
 
-//            BufferedWriter writer = null;
-//            BufferedReader reader = null;
-
             ListMultimap<Integer, String> post = ArrayListMultimap.create();
-
-//            var = 2;
-
-//            try {
-//                reader = new BufferedReader (new FileReader("src/group/idGroup.txt") );
-//                while (true){
-//                    idGroup[var] = Integer.parseInt(reader.readLine());
-//                    if (idGroup[var] >= 0000){
-//                        break;
-//                    }else {
-//                        var ++;
-//                    }
-//                }
-//            }catch (RuntimeException | FileNotFoundException e){
-//                log.error("Reading id group");
-//                e.printStackTrace();
-//            }finally {
-//                reader.close();
-//            }
 
             for (int i = 0; i <= var-1; i++) {
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//                          Reading the previous ones ID posts, saved local
-
-//                try {
-//                    reader = new BufferedReader(new FileReader("src/group/id_post" + idGroup[i] + ".txt"));
-//                    for (int p = 0; p <= 4; p ++) {
-//                        postIdOld[p] = Integer.parseInt(reader.readLine());
-//                    }
-//                } catch (RuntimeException e) {
-//                    log.error("Reader the id post failed");
-//                } finally {
-//                    reader.close();
-//                }
-
                 post = vkBot.http_client(idGroup[i]);
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//				json ID_post, text, type attachment, attachment
 
                 for (int i1 = 0 ; i1 < 5; i1 ++) {
 
@@ -153,30 +113,11 @@ public class ControllerBot {
                     }
 
                 }
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//                  Saving the id post in postIdOld
-
-//                try {
-//                    writer = new BufferedWriter(new FileWriter("src/group/id_post"
-//                            + idGroup[i] + ".txt"));
-//                    for (int i4 = 0; i4 <= 4; i4 ++) {
-//                        writer.write(Integer.toString(postIdNew[i4]));
-//                        writer.newLine();
-//                    }
-//                }catch (RuntimeException e) {
-//                    log.error("ERROR SAVING");
-//
-//                }finally {
-//                    writer.flush();
-//                    writer.close();
-//                }
 
                 for (int i3 = 0; i3 < 5; i3 ++){
 
-
                     postIdOld [i][i3] = postIdNew[i3];
 
-                    System.out.println("Post Id Old - " + postIdOld[i][i3]);
                 }
 
             }
