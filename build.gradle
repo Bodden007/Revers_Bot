@@ -8,16 +8,12 @@ plugins {
 
 tasks.withType(JavaCompile){
 	options.encoding = 'UTF-8'
-
 }
 
-//tasks.withType(Bot.jar) {
-//	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//}
-
-
-
 	tasks.jar {
+
+		archiveBaseName = 'Revers_Bot'
+		version = '1.0'
 
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 		manifest {
@@ -29,9 +25,6 @@ tasks.withType(JavaCompile){
 	}
 
 
-
-group = 'ReversBot'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '18'
 
 repositories {

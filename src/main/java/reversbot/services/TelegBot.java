@@ -30,7 +30,7 @@ public class TelegBot {
     public void sendHi (){
         urlTelegram = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=<em>%s</em>&parse_mode=html";
 
-        urlTelegram = String.format(urlTelegram, telegram_token, chat_id, "ПОДСЛУШАННО РЕЖ \uD83D\uDE48\uD83D\uDE49\uD83D\uDE4A");
+        urlTelegram = String.format(urlTelegram, telegram_token, chat_id, "ПОДСЛУШАНО РЕЖ \uD83D\uDE48\uD83D\uDE49\uD83D\uDE4A");
 
         sendURL(urlTelegram);
     }
